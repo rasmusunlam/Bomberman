@@ -1,17 +1,16 @@
-package juego;
+package juego.taller;
 
 import java.util.Random;
 
-import Escenario.Bomberman;
-import Escenario.Escenario;
 
-
+	
 public  class Escenario {
 	
 	protected static final int BLOQUE_FIJO=0;
 	protected static final int BLOQUE_DESTRUIBLE=1;
 	protected static final int ESPACIO_EN_BLANCO=2;
 	protected static final int JUGADOR_1 = 3;
+	protected static final int BOMBA = 4;
 	
 	private static final int TAM=9;
 	public int mat[][];
@@ -62,8 +61,11 @@ public  class Escenario {
 					}else {
 						if(mat[i][j]==2) {
 							System.out.print("- "); // => ESPACIO EN BLANCO
-						}else {
+						}else if(mat[i][j]==3){
 							System.out.print("J "); // => JUGADOR
+						}
+						else{
+							System.out.print("B "); // => BOMBA
 						}
 					}
 				}
@@ -72,15 +74,18 @@ public  class Escenario {
 		}
 	}
 	
+	public int getObjeto(int x, int y){
+		return this.mat[x][y];
+	}
 	
-	public static void main(String[] args) {
-		Escenario escenario = new Escenario();
-		Bomberman bomber = new Bomberman();
-		escenario.crearJugador(bomber);
-		bomber.moverHaciaAbajo(escenario);
+	public void setObjeto(int valor, int x, int y){
+		this.mat[x][y] = valor;
+	}
+	public void crearBomba(Bomba bomba) {
+		bomba.setPosicionX(2);
+		bomba.setPosicionY(1);
+		this.mat[2][1] = BOMBA;
 		
-		
-		escenario.dibujar();
 	}
 	
 	
