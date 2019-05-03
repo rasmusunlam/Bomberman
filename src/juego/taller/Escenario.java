@@ -2,18 +2,16 @@ package juego.taller;
 
 import java.util.Random;
 
-
-	
 public  class Escenario {
 	
-	protected static final int BLOQUE_FIJO=0;
-	protected static final int BLOQUE_DESTRUIBLE=1;
-	protected static final int ESPACIO_EN_BLANCO=2;
-	protected static final int JUGADOR_1 = 3;
-	protected static final int BOMBA = 4;
+	public static final int BLOQUE_FIJO=0;
+	public static final int BLOQUE_DESTRUIBLE=1;
+	public static final int ESPACIO_EN_BLANCO=2;
+	public static final int JUGADOR_1 = 3;
+	public static final int BOMBA = 4;
 	
 	private static final int TAM=9;
-	public int mat[][];
+	private int mat[][];
 	private int cantJugadores=0;
 	
 	public Escenario() {	//EL TAMAÑO DEL ESCENARIO DEBE SER IMPAR Y >= 3
@@ -40,12 +38,33 @@ public  class Escenario {
 			return false;
 		this.cantJugadores++;
 		if(this.cantJugadores == 1) {
-			bomber.posicionX = 1;
-			bomber.posicionY = 1;
-			bomber.numJugador = 3;
-			this.mat[bomber.posicionX][bomber.posicionY] = bomber.numJugador;
+			bomber.setPosicionX(1);
+			bomber.setPosicionY(1);
+			bomber.setNumJugador(3);
+			this.mat[bomber.getPosicionX()][bomber.getPosicionY()] = bomber.getNumJugador();
 			this.mat[1][2] = ESPACIO_EN_BLANCO;
 			this.mat[2][1] = ESPACIO_EN_BLANCO;
+		}else if(this.cantJugadores==2) {
+			bomber.setPosicionX(7);
+			bomber.setPosicionY(7);
+			bomber.setNumJugador(4);
+			this.mat[bomber.getPosicionX()][bomber.getPosicionY()] = bomber.getNumJugador();
+			this.mat[7][6] = ESPACIO_EN_BLANCO;
+			this.mat[6][7] = ESPACIO_EN_BLANCO;
+		}else if(this.cantJugadores==3) {
+			bomber.setPosicionX(1);
+			bomber.setPosicionY(7);
+			bomber.setNumJugador(5);
+			this.mat[bomber.getPosicionY()][bomber.getPosicionX()] = bomber.getNumJugador();
+			this.mat[7][2] = ESPACIO_EN_BLANCO;
+			this.mat[6][1] = ESPACIO_EN_BLANCO;
+		}else {
+			bomber.setPosicionX(7);
+			bomber.setPosicionY(1);
+			bomber.setNumJugador(6);
+			this.mat[bomber.getPosicionY()][bomber.getPosicionX()] = bomber.getNumJugador();
+			this.mat[1][6] = ESPACIO_EN_BLANCO;
+			this.mat[2][7] = ESPACIO_EN_BLANCO;
 		}
 		return true;
 	}

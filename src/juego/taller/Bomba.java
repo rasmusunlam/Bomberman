@@ -3,6 +3,7 @@ package juego.taller;
 public class Bomba {
 	protected int posicionX;
 	protected int posicionY;
+	
 	public Bomba(){		
 	}
 	
@@ -140,8 +141,6 @@ public class Bomba {
 			}
 			i++;
 		}
-		
-
 		
 		return false; 
 	}
