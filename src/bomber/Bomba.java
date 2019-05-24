@@ -1,5 +1,7 @@
 package bomber;
 
+import javax.swing.ImageIcon;
+
 public class Bomba extends Objeto {
 
 	public Bomba(Punto coordenada) {
@@ -7,10 +9,12 @@ public class Bomba extends Objeto {
 	}
 
 	@Override
-	public int tipoBloque() {
+	public ImageIcon getImagen() {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
+
+	
 	
 	
 	

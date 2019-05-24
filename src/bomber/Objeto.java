@@ -1,5 +1,7 @@
 package bomber;
 
+import javax.swing.ImageIcon;
+
 public abstract class Objeto {
 	
 	private Punto coordenada;
@@ -18,7 +20,7 @@ public abstract class Objeto {
 		this.coordenada = coordenada;
 	}
 	
-	public abstract int tipoBloque();
+	public abstract ImageIcon getImagen();
 		
 	
 }
