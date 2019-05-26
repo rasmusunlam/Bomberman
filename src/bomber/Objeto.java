@@ -1,6 +1,7 @@
 package bomber;
 
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 
 public abstract class Objeto {
 	

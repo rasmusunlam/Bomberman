@@ -14,8 +14,6 @@ public class Escenario extends JPanel {
 	private static final int TAM2=15;
 	private Objeto[][] escenario;
 	private ArrayList<Bomberman> bombers = new ArrayList<>();
-//	private ImageIcon bloqueF;
-//	private ImageIcon bloqueD;
 	private ImageIcon bomber1 = new ImageIcon("./src/bomber/Imagenes/Bomberman1.png");
 	private ImageIcon bomber2 = new ImageIcon("./src/bomber/Imagenes/Bomberman2.png");
 	private ImageIcon bomber3 = new ImageIcon("./src/bomber/Imagenes/Bomberman3.png");
@@ -23,9 +21,6 @@ public class Escenario extends JPanel {
 	
 	public Escenario() {
 		this.escenario = new Objeto[TAM][TAM2];
-		
-//		bloqueF = new ImageIcon("./src/bomber/Imagenes/bloqueDD.jpeg");
-//		bloqueD = new ImageIcon("./src/bomber/Imagenes/BloqueCC.jpeg");
 		Random aleatorio = new Random(System.currentTimeMillis());
 		Bloque_Fijo bloque;
 		Bloque_Destruible bloqueDestruible;
@@ -127,15 +122,10 @@ public class Escenario extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		setBackground(new Color(10,170,22));
-		Bloque_Fijo fijo = new Bloque_Fijo();
-		Bloque_Destruible des = new Bloque_Destruible();
 		for(int i=0; i<TAM; i++) {
-			for(int j=0; j<TAM2; j++) {
-				if(escenario[i][j] != null && escenario[i][j].getClass().equals(fijo.getClass())) {
+			for(int j=0; j<TAM2; j++) 
+				if(escenario[i][j] != null) 
 					g.drawImage(escenario[i][j].getImagen().getImage(),j*40 , i*40 , 40,40,null);
-				}else if(escenario[i][j] != null && escenario[i][j].getClass().equals(des.getClass()))
-					g.drawImage(escenario[i][j].getImagen().getImage(),j*40 , i*40 , 40,40,null);
-			}
 		}
 		
 		for (Bomberman bombero : bombers) {
