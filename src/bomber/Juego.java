@@ -22,10 +22,9 @@ public class Juego extends JFrame{
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 606, 548);
+		
 		ima = new ImageIcon("./src/bomber/Imagenes/bombermanIcono.png").getImage();
 		setIconImage(ima);
-		setLocationRelativeTo(null);
-		
 		
 		contentPane = new Escenario();
 		contentPane.agregarBomberman();
@@ -34,7 +33,7 @@ public class Juego extends JFrame{
 		contentPane.agregarBomberman();
 		
 		setContentPane(contentPane);
-		
+		setLocationRelativeTo(null);
 		addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent arg0) {
 				setMovimiento(arg0);
@@ -49,7 +48,6 @@ public class Juego extends JFrame{
 		});
 	}
 	
-	
 	private void confirmarCierreVentana() {
 		
 		int respuesta = JOptionPane.showConfirmDialog(this, "Desea cerrar esta ventana", "Confirmar para salir", JOptionPane.YES_NO_CANCEL_OPTION);
@@ -61,7 +59,7 @@ public class Juego extends JFrame{
 
 	public void setMovimiento(KeyEvent evento){
 		Bomberman nuevo;
-		double movimiento = 5;
+		double movimiento = 3;
 		
 		if(evento.getKeyCode() == KeyEvent.VK_LEFT) {
 			nuevo = contentPane.getBomberman(0);
@@ -89,6 +87,13 @@ public class Juego extends JFrame{
 			if(contentPane.moverAba(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaAbajo(movimiento);
 				contentPane.setBomberman(nuevo,0);
+			}
+		}
+		if(evento.getKeyCode() == KeyEvent.VK_B) {
+			nuevo = contentPane.getBomberman(0);
+			if(contentPane.ponerBomba(nuevo.getCoordenada())) {
+				contentPane.agregarObjeto(nuevo.ponerBomba());
+				
 			}
 		}
 		
@@ -124,6 +129,9 @@ public class Juego extends JFrame{
 		repaint();
 	}
 	
+	
+
+
 	public static void main(String[] args) {
 		new Juego().setVisible(true);
 	}
