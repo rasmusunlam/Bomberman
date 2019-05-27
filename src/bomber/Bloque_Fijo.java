@@ -1,22 +1,21 @@
 package bomber;
 
+import javax.swing.ImageIcon;
 
 public class Bloque_Fijo extends Objeto {
 	
-	private boolean estado;
-	private static final int BLOQUE = 1;
+	private ImageIcon imagen;
 	
 	public Bloque_Fijo() {
-		
 	}
 	public Bloque_Fijo(Punto coordenada) {
 		super(coordenada);
-		estado = true;
-	}
-	@Override
-	public int tipoBloque() {
-		return BLOQUE;
+		imagen = new ImageIcon("./src/bomber/Imagenes/bloqueDD.jpeg");
 	}
 	
+	@Override
+	public ImageIcon getImagen() {
+		return imagen;
+	}
 	
 }

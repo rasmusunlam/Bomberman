@@ -13,7 +13,6 @@ public class Punto {
 		this.y = y;
 	}
 	
-
 	public Double getX() {
 		return x;
 	}
