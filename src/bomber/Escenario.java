@@ -12,6 +12,9 @@ public class Escenario extends JPanel {
 	
 	private static final int TAM=13;
 	private static final int TAM2=15;
+	private static final int WIDTH_IMG = 40;
+    private static final int HEIGHT_IMG = 40;
+    
 	private Objeto[][] escenario;
 	private ArrayList<Bomberman> bombers = new ArrayList<>();
 	private ImageIcon bomber1 = new ImageIcon("./src/bomber/Imagenes/Bomberman1.png");
@@ -24,6 +27,7 @@ public class Escenario extends JPanel {
 		Random aleatorio = new Random(System.currentTimeMillis());
 		Bloque_Fijo bloque;
 		Bloque_Destruible bloqueDestruible;
+	
 		for(int i=0; i<TAM; i++) {
 			for(int j=0; j<TAM2; j++) {
 				if(i==0 || i==TAM-1 || j==0 || j==TAM2-1 || (i%2==0 && j%2==0)) { 
@@ -44,26 +48,26 @@ public class Escenario extends JPanel {
 		Bomberman bombero;
 		
 		if(bombers.size()==0) {
-			bombero = new Bomberman(new Punto(40,40),bomber1);
+			bombero = new Bomberman(new Punto(HEIGHT_IMG*1,WIDTH_IMG*1),bomber1);
 			escenario[1][1]=null;
 			escenario[1][2]=null;
 			escenario[2][1]=null;
 			bombers.add(bombero);
 		}else if(bombers.size()==1) {
-			bombero = new Bomberman(new Punto(40,520),bomber2);
+			bombero = new Bomberman(new Punto(HEIGHT_IMG*1,WIDTH_IMG*13),bomber2);
 			escenario[1][13]=null;
 			escenario[1][12]=null;
 			escenario[2][13]=null;
 			bombers.add(bombero);
 		}else if(bombers.size()==2) {
-			bombero = new Bomberman(new Punto(440,40),bomber3);
+			bombero = new Bomberman(new Punto(HEIGHT_IMG*11,WIDTH_IMG*1),bomber3);
 			escenario[11][1]=null;
 			escenario[11][2]=null;
 			escenario[10][1]=null;
 			bombers.add(bombero);
 		}
 		else if(bombers.size()==3) {
-			bombero = new Bomberman(new Punto(440,520),bomber4);
+			bombero = new Bomberman(new Punto(HEIGHT_IMG*11,WIDTH_IMG*13),bomber4);
 			escenario[11][13]=null;
 			escenario[11][12]=null;
 			escenario[10][13]=null;
@@ -79,41 +83,41 @@ public class Escenario extends JPanel {
 		return bombers.get(num);
 	}
 	
-	public boolean moverIzq(Punto punto, Double mov) {
+	public boolean moverIzq(Punto punto, double mov) {
 		
-		int x = punto.getX().intValue();
-		int j = punto.getY().intValue()-mov.intValue();
+		int x = (int)punto.getX();
+		int j = (int) punto.getY()-(int)mov;
 		
-		if(x%40 == 0 && escenario[x/40][j/40] == null) {
+		if(x%HEIGHT_IMG == 0 && escenario[x/HEIGHT_IMG][j/WIDTH_IMG] == null) {
 			return true;
 		}
 		return false;
 	}
-	public boolean moverDer(Punto punto, Double mov) {
+	public boolean moverDer(Punto punto, double mov) {
 		
-		int x = punto.getX().intValue();
-		int j = punto.getY().intValue();
-		if(x%40 == 0 && escenario[x/40][(j/40)+1] == null) {
+		int x = (int)punto.getX();
+		int j = (int) punto.getY();
+		if(x%HEIGHT_IMG == 0 && escenario[x/HEIGHT_IMG][(j/WIDTH_IMG)+1] == null) {
 			return true;
 		}
 		return false;
 	}
-	public boolean moverArr(Punto punto, Double mov) {
+	public boolean moverArr(Punto punto, double mov) {
 		
-		int x = punto.getX().intValue()-mov.intValue();
-		int j = punto.getY().intValue();
+		int x = (int)punto.getX()-(int)mov;
+		int j = (int)punto.getY();
 		
-		if(j%40 == 0 && escenario[x/40][j/40] == null) {
+		if(j%WIDTH_IMG == 0 && escenario[x/HEIGHT_IMG][j/WIDTH_IMG] == null) {
 			return true;
 		}
 		return false;
 	}
-	public boolean moverAba(Punto punto, Double mov) {
+	public boolean moverAba(Punto punto, double mov) {
 		
-		int x = punto.getX().intValue();
-		int j = punto.getY().intValue();
+		int x = (int)punto.getX();
+		int j = (int) punto.getY();
 		
-		if(j%40==0 && escenario[(x/40)+1][j/40]== null) {
+		if(j%WIDTH_IMG==0 && escenario[(x/HEIGHT_IMG)+1][j/WIDTH_IMG]== null) {
 			return true;
 		}
 		return false;
@@ -125,15 +129,31 @@ public class Escenario extends JPanel {
 		for(int i=0; i<TAM; i++) {
 			for(int j=0; j<TAM2; j++) 
 				if(escenario[i][j] != null) 
-					g.drawImage(escenario[i][j].getImagen().getImage(),j*40 , i*40 , 40,40,null);
+					g.drawImage(escenario[i][j].getImagen().getImage(),j*WIDTH_IMG , i*HEIGHT_IMG , WIDTH_IMG,HEIGHT_IMG,null);
 		}
 		
 		for (Bomberman bombero : bombers) {
-			Double i = bombero.getCoordenada().getX();
-			Double j = bombero.getCoordenada().getY();
-			g.drawImage(bombero.getImagen().getImage(),j.intValue(),i.intValue(), 40, 40, null);	
-		}
+			g.drawImage(bombero.getImagen().getImage(), (int)bombero.getCoordenada().getY(), (int)bombero.getCoordenada().getX(),  WIDTH_IMG,HEIGHT_IMG, null);
+		} 
 		
 	}
+	public boolean ponerBomba(Punto coordenada) {
+		if((int)coordenada.getX()%HEIGHT_IMG == 0 && (int)coordenada.getY()%WIDTH_IMG == 0)
+			return true;
+		return false;
+	}
+	public void agregarObjeto(Bomba bomba) {
+		escenario[(int)bomba.getCoordenada().getX()/HEIGHT_IMG][(int)bomba.getCoordenada().getY()/WIDTH_IMG] = bomba;
+	}
+	
+	
+	public  int getWidthImg() {
+		return WIDTH_IMG;
+	}
+	public  int getHeightImg() {
+		return HEIGHT_IMG;
+	}
+	
+	
 	
 }

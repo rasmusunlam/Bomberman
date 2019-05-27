@@ -2,8 +2,8 @@ package bomber;
 
 public class Punto {
 	
-	private Double x;
-	private Double y;
+	private double x;
+	private double y;
 	
 	public Punto() {
 	}
@@ -13,7 +13,7 @@ public class Punto {
 		this.y = y;
 	}
 	
-	public Double getX() {
+	public double getX() {
 		return x;
 	}
 
@@ -21,7 +21,7 @@ public class Punto {
 		this.x = x;
 	}
 
-	public Double getY() {
+	public double getY() {
 		return y;
 	}
 
