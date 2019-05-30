@@ -86,7 +86,7 @@ public class Escenario extends JPanel {
 	public boolean moverIzq(Punto punto, double mov) {
 		
 		int x = (int)punto.getX();
-		int j = (int) punto.getY()-(int)mov;
+		int j = (int)punto.getY()-(int)mov;
 		
 		if(x%HEIGHT_IMG == 0 && escenario[x/HEIGHT_IMG][j/WIDTH_IMG] == null) {
 			return true;

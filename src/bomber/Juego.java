@@ -59,7 +59,7 @@ public class Juego extends JFrame{
 
 	public void setMovimiento(KeyEvent evento){
 		Bomberman nuevo;
-		double movimiento = 3;
+		double movimiento = 2;
 		
 		if(evento.getKeyCode() == KeyEvent.VK_LEFT) {
 			nuevo = contentPane.getBomberman(0);
