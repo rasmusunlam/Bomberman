@@ -1,6 +1,8 @@
 package bomber;
 
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -11,11 +13,20 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 public class Juego extends JFrame{
 	
 	private Escenario contentPane;
 	private Image ima;
+	private Timer reDibujo = new Timer(40, new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			repaint();
+		}
+	});
 	
 	public Juego() {
 		super("Bomberman");
@@ -46,6 +57,7 @@ public class Juego extends JFrame{
 				confirmarCierreVentana();
 			}
 		});
+		reDibujo.start();
 	}
 	
 	private void confirmarCierreVentana() {
@@ -59,13 +71,14 @@ public class Juego extends JFrame{
 
 	public void setMovimiento(KeyEvent evento){
 		Bomberman nuevo;
-		double movimiento = 3;
+		double movimiento = 5;
 		
 		if(evento.getKeyCode() == KeyEvent.VK_LEFT) {
 			nuevo = contentPane.getBomberman(0);
 			if(contentPane.moverIzq(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaIzquieda(-movimiento);
 				contentPane.setBomberman(nuevo,0);
+				return;
 			}
 		}
 		if(evento.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -73,6 +86,7 @@ public class Juego extends JFrame{
 			if(contentPane.moverDer(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaDerecha(movimiento);
 				contentPane.setBomberman(nuevo,0);
+				return;
 			}
 		}
 		if(evento.getKeyCode() == KeyEvent.VK_UP) {
@@ -80,6 +94,7 @@ public class Juego extends JFrame{
 			if(contentPane.moverArr(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaArriba(-movimiento);
 				contentPane.setBomberman(nuevo,0);
+				return;
 			}
 		}
 		if(evento.getKeyCode() == KeyEvent.VK_DOWN) {
@@ -87,13 +102,15 @@ public class Juego extends JFrame{
 			if(contentPane.moverAba(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaAbajo(movimiento);
 				contentPane.setBomberman(nuevo,0);
+				return;
 			}
 		}
 		if(evento.getKeyCode() == KeyEvent.VK_B) {
 			nuevo = contentPane.getBomberman(0);
-			if(contentPane.ponerBomba(nuevo.getCoordenada())) {
-				contentPane.agregarObjeto(nuevo.ponerBomba());
-				
+			Punto coordenada = new Punto(nuevo.getCoordenada().getX(), nuevo.getCoordenada().getY());
+			if(contentPane.ponerBomba(coordenada)) {
+				contentPane.agregarObjeto(new Bomba(coordenada));
+				return;
 			}
 		}
 		
@@ -103,6 +120,7 @@ public class Juego extends JFrame{
 			if(contentPane.moverIzq(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaIzquieda(-movimiento);
 				contentPane.setBomberman(nuevo,1);
+				return;
 			}
 		}
 		if(evento.getKeyCode() == KeyEvent.VK_D) {
@@ -110,6 +128,7 @@ public class Juego extends JFrame{
 			if(contentPane.moverDer(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaDerecha(movimiento);
 				contentPane.setBomberman(nuevo,1);
+				return;
 			}
 		}
 		if(evento.getKeyCode() == KeyEvent.VK_W) {
@@ -117,6 +136,7 @@ public class Juego extends JFrame{
 			if(contentPane.moverArr(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaArriba(-movimiento);
 				contentPane.setBomberman(nuevo,1);
+				return;
 			}
 		}
 		if(evento.getKeyCode() == KeyEvent.VK_S) {
@@ -124,9 +144,10 @@ public class Juego extends JFrame{
 			if(contentPane.moverAba(nuevo.getCoordenada(),movimiento)) {
 				nuevo.moverHaciaAbajo(movimiento);
 				contentPane.setBomberman(nuevo,1);
+				return;
 			}
 		}
-		repaint();
+		//repaint();
 	}
 	
 	
