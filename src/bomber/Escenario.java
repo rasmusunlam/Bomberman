@@ -20,10 +20,10 @@ public class Escenario extends JPanel {
     
 	private Objeto[][] escenario;
 	private ArrayList<Bomberman> bombers = new ArrayList<>();
-	private ImageIcon bomber1 = new ImageIcon("./src/bomber/Imagenes/Bomberman1.png");
-	private ImageIcon bomber2 = new ImageIcon("./src/bomber/Imagenes/Bomberman2.png");
-	private ImageIcon bomber3 = new ImageIcon("./src/bomber/Imagenes/Bomberman3.png");
-	private ImageIcon bomber4 = new ImageIcon("./src/bomber/Imagenes/Bomberman4.png");
+//	private ImageIcon bomber1 = new ImageIcon("./src/bomber/Imagenes/Bomberman1.png");
+//	private ImageIcon bomber2 = new ImageIcon("./src/bomber/Imagenes/Bomberman2.png");
+//	private ImageIcon bomber3 = new ImageIcon("./src/bomber/Imagenes/Bomberman3.png");
+//	private ImageIcon bomber4 = new ImageIcon("./src/bomber/Imagenes/Bomberman4.png");
 	
 	public Escenario() {
 		this.escenario = new Objeto[TAM][TAM2];
@@ -51,26 +51,26 @@ public class Escenario extends JPanel {
 		Bomberman bombero;
 		
 		if(bombers.size()==0) {
-			bombero = new Bomberman(new Punto(HEIGHT_IMG*1,WIDTH_IMG*1),bomber1);
+			bombero = new Bomberman(new Punto(HEIGHT_IMG*1,WIDTH_IMG*1));
 			escenario[1][1]=null;
 			escenario[1][2]=null;
 			escenario[2][1]=null;
 			bombers.add(bombero);
 		}else if(bombers.size()==1) {
-			bombero = new Bomberman(new Punto(HEIGHT_IMG*1,WIDTH_IMG*13),bomber2);
+			bombero = new Bomberman(new Punto(HEIGHT_IMG*1,WIDTH_IMG*13));
 			escenario[1][13]=null;
 			escenario[1][12]=null;
 			escenario[2][13]=null;
 			bombers.add(bombero);
 		}else if(bombers.size()==2) {
-			bombero = new Bomberman(new Punto(HEIGHT_IMG*11,WIDTH_IMG*1),bomber3);
+			bombero = new Bomberman(new Punto(HEIGHT_IMG*11,WIDTH_IMG*1));
 			escenario[11][1]=null;
 			escenario[11][2]=null;
 			escenario[10][1]=null;
 			bombers.add(bombero);
 		}
 		else if(bombers.size()==3) {
-			bombero = new Bomberman(new Punto(HEIGHT_IMG*11,WIDTH_IMG*13),bomber4);
+			bombero = new Bomberman(new Punto(HEIGHT_IMG*11,WIDTH_IMG*13));
 			escenario[11][13]=null;
 			escenario[11][12]=null;
 			escenario[10][13]=null;
@@ -91,7 +91,7 @@ public class Escenario extends JPanel {
 		int x = (int)punto.getX();
 		int j = (int) punto.getY()-(int)mov;
 		
-		if(x%HEIGHT_IMG == 0 && escenario[x/HEIGHT_IMG][j/WIDTH_IMG] == null) {
+		if(x%HEIGHT_IMG == 0 && (escenario[x/HEIGHT_IMG][j/WIDTH_IMG] == null||escenario[x/HEIGHT_IMG][(j/WIDTH_IMG)].getClass().getName().contains("Explosion"))) {
 			return true;
 		}
 		return false;
@@ -100,7 +100,7 @@ public class Escenario extends JPanel {
 		
 		int x = (int)punto.getX();
 		int j = (int) punto.getY();
-		if(x%HEIGHT_IMG == 0 && escenario[x/HEIGHT_IMG][(j/WIDTH_IMG)+1] == null) {
+		if(x%HEIGHT_IMG == 0 && (escenario[x/HEIGHT_IMG][(j/WIDTH_IMG)+1] == null||escenario[x/HEIGHT_IMG][(j/WIDTH_IMG)+1].getClass().getName().contains("Explosion"))) {
 			return true;
 		}
 		return false;
@@ -110,7 +110,7 @@ public class Escenario extends JPanel {
 		int x = (int)punto.getX()-(int)mov;
 		int j = (int)punto.getY();
 		
-		if(j%WIDTH_IMG == 0 && escenario[x/HEIGHT_IMG][j/WIDTH_IMG] == null) {
+		if(j%WIDTH_IMG == 0 && (escenario[x/HEIGHT_IMG][j/WIDTH_IMG] == null||escenario[x/HEIGHT_IMG][(j/WIDTH_IMG)].getClass().getName().contains("Explosion")) ){
 			return true;
 		}
 		return false;
@@ -120,7 +120,7 @@ public class Escenario extends JPanel {
 		int x = (int)punto.getX();
 		int j = (int) punto.getY();
 		
-		if(j%WIDTH_IMG==0 && escenario[(x/HEIGHT_IMG)+1][j/WIDTH_IMG]== null) {
+		if(j%WIDTH_IMG==0 && (escenario[(x/HEIGHT_IMG)+1][j/WIDTH_IMG]== null||escenario[(x/HEIGHT_IMG)+1][(j/WIDTH_IMG)].getClass().getName().contains("Explosion")) ){
 			return true;
 		}
 		return false;
@@ -136,7 +136,9 @@ public class Escenario extends JPanel {
 		}
 		
 		for (Bomberman bombero : bombers) {
-			g.drawImage(bombero.getImagen().getImage(), (int)bombero.getCoordenada().getY(), (int)bombero.getCoordenada().getX(),  WIDTH_IMG,HEIGHT_IMG, null);
+			if(bombero.getVivo()) {
+				g.drawImage(bombero.getImagen().getImage(), (int)bombero.getCoordenada().getY(), (int)bombero.getCoordenada().getX(),  WIDTH_IMG,HEIGHT_IMG, null);
+			}
 		} 
 		
 	}
@@ -148,91 +150,94 @@ public class Escenario extends JPanel {
 	
 	public void agregarObjeto(Bomba bomba) {
 		escenario[(int)bomba.getCoordenada().getX()/HEIGHT_IMG][(int)bomba.getCoordenada().getY()/WIDTH_IMG] = bomba;
-		ArrayList<Punto> sectorDeExplosion = new ArrayList<>(); 
+		ArrayList<Punto> sectorDeExplosion = ((Bomba)escenario[(int)bomba.getCoordenada().getX()/HEIGHT_IMG][(int)bomba.getCoordenada().getY()/WIDTH_IMG]).explotar(); 
+		ArrayList<Punto> explosion;
+		explosion = dibujarExplosion(sectorDeExplosion);
+		modificar(explosion);		
+	}
+	
+	
+	public ArrayList<Punto> dibujarExplosion(ArrayList<Punto> puntosExplotan) {
+		ArrayList<Punto> explosion = new ArrayList<Punto>();
+		Timer tiempo = new Timer(3000, new  ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				if(	condicionExplosion(puntosExplotan,0)) {
+						
+						Explosion expo = new Explosion(puntosExplotan.get(0));
+						expo.setImagenCentro();
+						escenario[(int)puntosExplotan.get(0).getX()][(int)puntosExplotan.get(0).getY()] = expo ;
+						explosion.add(puntosExplotan.get(0));
+					
+				}				
+				if(condicionExplosion(puntosExplotan,1)){
+					
+						Explosion expo1 = new Explosion(puntosExplotan.get(1));
+						expo1.setImagenAbajo();
+						escenario[(int)puntosExplotan.get(1).getX()][(int)puntosExplotan.get(1).getY()] = expo1;	
+						explosion.add(puntosExplotan.get(1));
+					
+				}
+				if(	condicionExplosion(puntosExplotan,2)) {
+					Explosion expo2 = new Explosion(puntosExplotan.get(2));
+						expo2.setImagenArriba();
+						escenario[(int)puntosExplotan.get(2).getX()][(int)puntosExplotan.get(2).getY()] = expo2;
+						explosion.add(puntosExplotan.get(2));
+				}
+				if(	condicionExplosion(puntosExplotan,3)) {
+					Explosion expo3 = new Explosion(puntosExplotan.get(3));
+						expo3.setImagenIzquierda();
+						escenario[(int)puntosExplotan.get(3).getX()][(int)puntosExplotan.get(3).getY()] = expo3;
+						explosion.add(puntosExplotan.get(3));
+				}		
+				if(	condicionExplosion(puntosExplotan,4)) {
+					Explosion expo4 = new Explosion(puntosExplotan.get(4));
+					 	expo4.setImagenDerecha();
+						escenario[(int)puntosExplotan.get(4).getX()][(int)puntosExplotan.get(4).getY()] = expo4;
+						explosion.add(puntosExplotan.get(4));
+				}	
+			}
+
+		});
+		tiempo.setRepeats(false);
+		tiempo.start();
+		return explosion;
+	}
+	
+	private boolean condicionExplosion(ArrayList<Punto> puntosExplotan,int n) {
+		return escenario[(int)puntosExplotan.get(n).getX()][(int)puntosExplotan.get(n).getY()] == null ||
+			(escenario[(int)puntosExplotan.get(n).getX()][(int)puntosExplotan.get(n).getY()].getClass().getName().contains("Bomberman") ||
+			escenario[(int)puntosExplotan.get(n).getX()][(int)puntosExplotan.get(n).getY()].getClass().getName().contains("Bloque_Destruible")||
+			escenario[(int)puntosExplotan.get(n).getX()][(int)puntosExplotan.get(n).getY()].getClass().getName().contains("Bomba"));
+	}	
+	
+	public void modificar (ArrayList<Punto> sector) {
 		
 		Timer tiempo = new Timer(4000, new  ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<Punto> puntosExplotan = ((Bomba)escenario[(int)bomba.getCoordenada().getX()/HEIGHT_IMG][(int)bomba.getCoordenada().getY()/WIDTH_IMG]).explotar();
 				
-				
-				if(	escenario[(int)puntosExplotan.get(0).getX()][(int)puntosExplotan.get(0).getY()] != null &&
-					(escenario[(int)puntosExplotan.get(0).getX()][(int)puntosExplotan.get(0).getY()].getClass().getName().contains("Bloque_Destruible")||
-					escenario[(int)puntosExplotan.get(0).getX()][(int)puntosExplotan.get(0).getY()].getClass().getName().contains("Bomba")					)) {
-						Explosion expo = new Explosion(puntosExplotan.get(0));
-						expo.setImagenCentro();
-						escenario[(int)puntosExplotan.get(0).getX()][(int)puntosExplotan.get(0).getY()] = expo ;
-						sectorDeExplosion.add(puntosExplotan.get(0));
-				}
-				
-				if(	escenario[(int)puntosExplotan.get(1).getX()][(int)puntosExplotan.get(1).getY()] == null ||
-					(escenario[(int)puntosExplotan.get(1).getX()][(int)puntosExplotan.get(1).getY()].getClass().getName().contains("Bomberman") ||
-					escenario[(int)puntosExplotan.get(1).getX()][(int)puntosExplotan.get(1).getY()].getClass().getName().contains("Bloque_Destruible"))){
-						Explosion expo1 = new Explosion(puntosExplotan.get(1));
-						expo1.setImagenAbajo();
-						escenario[(int)puntosExplotan.get(1).getX()][(int)puntosExplotan.get(1).getY()] = expo1;	
-						sectorDeExplosion.add(puntosExplotan.get(1));
-				}
-				
-
-				
-				
-				if(	escenario[(int)puntosExplotan.get(2).getX()][(int)puntosExplotan.get(2).getY()] == null ||
-					(escenario[(int)puntosExplotan.get(2).getX()][(int)puntosExplotan.get(2).getY()].getClass().getName().contains("Bomberman") ||
-					escenario[(int)puntosExplotan.get(2).getX()][(int)puntosExplotan.get(2).getY()].getClass().getName().contains("Bloque_Destruible"))) {
-					Explosion expo2 = new Explosion(puntosExplotan.get(2));
-						expo2.setImagenArriba();;
-						escenario[(int)puntosExplotan.get(2).getX()][(int)puntosExplotan.get(2).getY()] = expo2;
-						sectorDeExplosion.add(puntosExplotan.get(2));
-				}
-
-				
-				
-				if(	escenario[(int)puntosExplotan.get(3).getX()][(int)puntosExplotan.get(3).getY()] == null ||
-					(escenario[(int)puntosExplotan.get(3).getX()][(int)puntosExplotan.get(3).getY()].getClass().getName().contains("Bomberman") ||
-					escenario[(int)puntosExplotan.get(3).getX()][(int)puntosExplotan.get(3).getY()].getClass().getName().contains("Bloque_Destruible"))) {
-					Explosion expo3 = new Explosion(puntosExplotan.get(3));
-						expo3.setImagenIzquierda();;
-						escenario[(int)puntosExplotan.get(3).getX()][(int)puntosExplotan.get(3).getY()] = expo3;
-						sectorDeExplosion.add(puntosExplotan.get(3));
-				}
-
-						
-				if(	escenario[(int)puntosExplotan.get(4).getX()][(int)puntosExplotan.get(4).getY()] == null ||
-					(escenario[(int)puntosExplotan.get(4).getX()][(int)puntosExplotan.get(4).getY()].getClass().getName().contains("Bomberman") ||
-					escenario[(int)puntosExplotan.get(4).getX()][(int)puntosExplotan.get(4).getY()].getClass().getName().contains("Bloque_Destruible"))) {
-					Explosion expo4 = new Explosion(puntosExplotan.get(4));
-					 	expo4.setImagenDerecha();
-						escenario[(int)puntosExplotan.get(4).getX()][(int)puntosExplotan.get(4).getY()] = expo4;
-						sectorDeExplosion.add(puntosExplotan.get(4));
-				}
+				for (Punto punto : sector) {
+					if(escenario[(int)punto.getX()][(int)punto.getY()].getClass().getName().contains("Bomba")) {
+						Bomba bomba = (Bomba)escenario[(int)punto.getX()][(int)punto.getY()];
+						bomba.explotar();
+					}
+					escenario[(int)punto.getX()][(int)punto.getY()]=null;
 					
-				
-			}		});
+					for (Bomberman bomber : bombers) {
+						Punto p = new Punto(bomber.getCoordenada().getX()/40,bomber.getCoordenada().getY()/40);
+						if(p.equals(punto)) {
+							bomber.morir();
+						}
+					}
+				}
+			}
+		});
+		
 		tiempo.setRepeats(false);
 		tiempo.start();
-			
-//		Timer tiempo2 = new Timer(1000, new  ActionListener() {
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				for (Punto punto : sectorDeExplosion) {
-//					escenario[(int)punto.getX()][(int)punto.getY()] = null;
-//				}
-//			}
-//		});
-//		tiempo2.setRepeats(false);
-//		tiempo2.start();
 	}
-	
-//	
-//	public  int getWidthImg() {
-//		return WIDTH_IMG;
-//	}
-//	public  int getHeightImg() {
-//		return HEIGHT_IMG;
-//	}
-//	
-//	
 	
 }

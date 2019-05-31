@@ -5,19 +5,26 @@ import javax.swing.ImageIcon;
 public class Bomberman {
 	
 	private static final int CANT_BOMBAS = 5;
+	private static Integer numBomberman = 1;
 	private Punto coordenada;
-	private ImageIcon imagen;
+	private boolean vivo = true;
 	private int cantBombas;
+	private ImageIcon bomberD;
+	private ImageIcon bomberI;
+	private ImageIcon ima;
 	
-	public Bomberman(ImageIcon ima) {
-		this.imagen = ima;
-		this.cantBombas = CANT_BOMBAS;
-	}
 	
-	public Bomberman(Punto coordenada,ImageIcon ima) {
+	public Bomberman(Punto coordenada) {
 		this.coordenada = coordenada;
-		this.imagen = ima;
+		this.bomberD = new ImageIcon("./src/bomber/Imagenes/bomberman"+numBomberman.toString()+"Der.png");
+		this.bomberI = new ImageIcon("./src/bomber/Imagenes/bomberman"+numBomberman.toString()+"Izq.png");
+		if(numBomberman%2 == 0) {
+			ima = bomberI; 
+		}else {
+			ima = bomberD;
+		}
 		this.cantBombas = CANT_BOMBAS;
+		numBomberman++;
 	}
 	
 	public void moverHaciaArriba(double delta) {
@@ -35,10 +42,10 @@ public class Bomberman {
 	}
 	
 	public ImageIcon getImagen() {
-		return imagen;
+		return ima;
 	}
 	public void setImagen(ImageIcon imagen) {
-		this.imagen = imagen;
+		this.ima = imagen;
 	}
 	public Punto getCoordenada() {
 		return coordenada;
@@ -49,5 +56,22 @@ public class Bomberman {
 		cantBombas--;
 		return bomba;
 	}
+
+	public void setPunto(Punto punto) {
+		this.coordenada = punto;
+	}
+
+	public boolean getVivo() {
+		return this.vivo;
+	}
+	public void setImagIzq() {
+		this.ima = this.bomberI;
+	}
+	public void setImagDer() {
+		this.ima = this.bomberD;
+	}
 	
+	public void morir() {
+		this.vivo=false;
+	}
 }
