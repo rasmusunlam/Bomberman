@@ -9,7 +9,6 @@ import org.junit.rules.Timeout;
 public class Bomba extends Objeto {
 	
 	private ImageIcon image;
-	
 	public Bomba(Punto coordenada) {
 		super(coordenada);
 		image = new ImageIcon("./src/bomber/Imagenes/bomba.png");
