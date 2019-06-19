@@ -12,33 +12,73 @@ public class Bomberman {
 	private ImageIcon bomberD;
 	private ImageIcon bomberI;
 	private ImageIcon ima;
+	private ImageIcon[] imagenArriba;
+	private ImageIcon[] imagenAbajo;
+	private ImageIcon[] imagenIzquierda;
+	private ImageIcon[] imagenDerecha;
+	private int contador = 0;
 	
 	
 	public Bomberman(Punto coordenada) {
 		this.coordenada = coordenada;
-		this.bomberD = new ImageIcon("./src/bomber/Imagenes/bomberman"+numBomberman.toString()+"Der.png");
+		/*this.bomberD = new ImageIcon("./src/bomber/Imagenes/bomberman"+numBomberman.toString()+"Der.png");
 		this.bomberI = new ImageIcon("./src/bomber/Imagenes/bomberman"+numBomberman.toString()+"Izq.png");
 		if(numBomberman%2 == 0) {
 			ima = bomberI; 
 		}else {
 			ima = bomberD;
-		}
+		}*/
 		this.cantBombas = CANT_BOMBAS;
 		numBomberman++;
+		cargarAnimacion();
 	}
 	
 	public void moverHaciaArriba(double delta) {
+		
+		contador = contador >= 4 ? 0 : contador + 1;
+		ima = this.imagenArriba[contador];
+		
 		this.coordenada.desplazar(delta, 0);
 	}
 	
 	public void moverHaciaAbajo(double delta) {
+		
+		contador = contador >= 4 ? 0 : contador + 1;
+		ima = this.imagenAbajo[contador];
+		
 		this.coordenada.desplazar(delta, 0);
 	}
 	public void moverHaciaDerecha(double delta) {
+		
+		contador = contador >= 4 ? 0 : contador + 1;
+		ima = this.imagenDerecha[contador];
+		
 		this.coordenada.desplazar(0, delta);
 	}
 	public void moverHaciaIzquieda(double delta) {
+		
+		contador = contador >= 4 ? 0 : contador + 1;
+		ima = this.imagenIzquierda[contador];
+		
 		this.coordenada.desplazar(0, delta);
+	}
+	
+	
+	private void cargarAnimacion(){
+		this.imagenArriba = new ImageIcon[5];
+		this.imagenAbajo = new ImageIcon[5];
+		this.imagenIzquierda = new ImageIcon[5];
+		this.imagenDerecha = new ImageIcon[5];
+		
+		for(int i = 1; i <= 5; i++){
+			this.imagenArriba[i - 1] = new ImageIcon("./resources/bomberman/arriba"+i+".gif");
+			this.imagenAbajo[i - 1] = new ImageIcon("./resources/bomberman/abajo"+i+".gif");
+			this.imagenIzquierda[i - 1] = new ImageIcon("./resources/bomberman/izquierda"+i+".gif");
+			this.imagenDerecha[i - 1] = new ImageIcon("./resources/bomberman/derecha"+i+".gif");
+		}
+		
+		ima = this.imagenDerecha[0];
+		
 	}
 	
 	public ImageIcon getImagen() {

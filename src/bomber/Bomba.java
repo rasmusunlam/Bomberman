@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 
-import org.junit.rules.Timeout;
+//import org.junit.rules.Timeout;
 
 public class Bomba extends Objeto {
 	

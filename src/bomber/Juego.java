@@ -19,6 +19,10 @@ public class Juego extends JFrame{
 	
 	private Escenario contentPane;
 	private Image ima;
+	private boolean arriba, abajo, izquierda, derecha;
+	private boolean ponerBomb;
+	
+	
 	private Timer reDibujo = new Timer(10, new ActionListener() {
 		
 		@Override
@@ -43,8 +47,16 @@ public class Juego extends JFrame{
 		setContentPane(contentPane);
 		setLocationRelativeTo(null);
 		addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent arg0) {
-				setMovimiento(arg0);
+			
+			@Override
+			public void keyPressed(KeyEvent arg0) { //CUANDO SE PRESIONA UNA TECLA
+				//setMovimiento(arg0);
+				movimientoTrue(arg0);
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent arg0) { //CUANDO SE DEJA DE PRESIONAR.
+				movimientoFalse(arg0);
 			}
 		});
 		
@@ -64,9 +76,108 @@ public class Juego extends JFrame{
 			System.exit(0);
 		}	
 	}
+	
+	
+	private void movimientoTrue(KeyEvent e){
+		
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_UP:
+				arriba = true;
+				break;
+			case KeyEvent.VK_DOWN:
+				abajo = true;
+				break;
+			case KeyEvent.VK_LEFT:
+				izquierda = true;
+				break;	
+			case KeyEvent.VK_RIGHT:
+				derecha = true;
+				break;
+			case KeyEvent.VK_B:
+				ponerBomb = true;
+
+		}
+		
+	}
+	
+	private void movimientoFalse(KeyEvent e){
+		
+		switch (e.getKeyCode()) {
+			case KeyEvent.VK_UP:
+				arriba = false;
+				break;
+			case KeyEvent.VK_DOWN:
+				abajo = false;
+				break;
+			case KeyEvent.VK_LEFT:
+				izquierda = false;
+				break;
+			case KeyEvent.VK_RIGHT:
+				derecha = false;
+				break;
+			case KeyEvent.VK_B:
+				ponerBomb = false;
+
+		}
+	}
+	
+	public void mover(){
+		
+		Bomberman nuevo;
+		double movimiento = 10;
+		
+		if(arriba) {
+			nuevo = contentPane.getBomberman(0);
+			if(contentPane.moverArr(nuevo.getCoordenada(),movimiento)) {
+				nuevo.moverHaciaArriba(-movimiento);
+				contentPane.setBomberman(nuevo,0);
+				return;
+			}
+		}
+		
+		if(abajo) {
+			nuevo = contentPane.getBomberman(0);
+			if(contentPane.moverAba(nuevo.getCoordenada(),movimiento)) {
+				nuevo.moverHaciaAbajo(movimiento);
+				contentPane.setBomberman(nuevo,0);
+				return;
+			}
+		}
+		
+		if(izquierda) {
+			nuevo = contentPane.getBomberman(0);
+			if(contentPane.moverIzq(nuevo.getCoordenada(),movimiento)) {
+				nuevo.moverHaciaIzquieda(-movimiento);
+				//nuevo.setImagIzq();
+				contentPane.setBomberman(nuevo,0);
+				return;
+			}
+		}
+		
+		if(derecha) {
+			nuevo = contentPane.getBomberman(0);
+			if(contentPane.moverDer(nuevo.getCoordenada(),movimiento)) {
+				nuevo.moverHaciaDerecha(movimiento);
+				//nuevo.setImagDer();
+				contentPane.setBomberman(nuevo,0);
+				return;
+			}
+		}
+		
+		if(ponerBomb) {
+			nuevo = contentPane.getBomberman(0);
+			Punto coordenada = new Punto(nuevo.getCoordenada().getX(), nuevo.getCoordenada().getY());
+			contentPane.agregarObjeto(coordenada);
+			return;
+		
+		}
+		
+		//repaint();
+		
+	}
 
 
-	public void setMovimiento(KeyEvent evento){
+	/*public void setMovimiento(KeyEvent evento){
 		Bomberman nuevo;
 		double movimiento = 10;
 		
@@ -111,7 +222,7 @@ public class Juego extends JFrame{
 			contentPane.agregarObjeto(coordenada);
 			return;
 		
-		}
+		}*/
 		
 		///  MOVIMIENTO SEGUNDO BOMBERMAN 
 //		if(evento.getKeyCode() == KeyEvent.VK_A) {
@@ -156,14 +267,25 @@ public class Juego extends JFrame{
 //				return;
 //			}
 //		}
-		repaint();
-	}
+		//repaint();
+	//}
 	
 	
 
 
 	public static void main(String[] args) {
-		new Juego().setVisible(true);
+		
+		Juego juego = new Juego();
+		juego.setVisible(true);
+		
+			while (true) {
+				try {
+					Thread.sleep(60); //Le doy cierto tiempo por ciclo. Si esto el bomber tendria Hipervelocidad(?
+					juego.mover();
+				} catch (InterruptedException e) {
+						e.printStackTrace();
+				}
+			}
 	}
 
 }
