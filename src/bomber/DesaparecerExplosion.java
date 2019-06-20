@@ -3,7 +3,8 @@ package bomber;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Timer;
 
@@ -12,7 +13,7 @@ public class DesaparecerExplosion extends Thread {
 	private ArrayList<Explosion> sector;
 	private int tiempo;
 	private Objeto[][] esc;
-	private ArrayList<Bomberman> bomber;
+	private Map<Integer,Bomberman> bomber = new HashMap<Integer,Bomberman>();
 	
 	public DesaparecerExplosion(ArrayList<Explosion> lista,Objeto[][] escenario) {
 		sector = lista;
@@ -37,14 +38,15 @@ public class DesaparecerExplosion extends Thread {
 				
 				for (Explosion punto : sector) {
 					if(!bomber.isEmpty()) {
-						for (Bomberman bomberman : bomber) {
-						Punto p = new Punto((int)bomberman.getCoordenada().getX()/40,(int)bomberman.getCoordenada().getY()/40);
+						for (Map.Entry<Integer, Bomberman> bomberman : bomber.entrySet()) {
+						Punto p = new Punto((int)bomberman.getValue().getCoordenada().getX()/40,(int)bomberman.getValue().getCoordenada().getY()/40);
 						if(p.equals(punto.getCoordenada()))
-							bomberman.morir();
+							bomberman.getValue().morir();
 					}}
 					esc[(int)punto.getCoordenada().getX()][(int)punto.getCoordenada().getY()] = null;
 
 				}
+				bomber.get(0).descontarBomba();
 				
 			}
 		});
@@ -56,10 +58,10 @@ public class DesaparecerExplosion extends Thread {
 	public Objeto[][] actualizar(){
 		return esc;
 	}
-	public ArrayList<Bomberman> getBomber() {
+	public Map<Integer,Bomberman> getBomber() {
 		return bomber;
 	}
-	public void setBomber(ArrayList<Bomberman> bomber) {
+	public void setBomber(Map<Integer,Bomberman> bomber) {
 		this.bomber = bomber;
 	}
 	

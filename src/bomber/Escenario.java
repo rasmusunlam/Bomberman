@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -19,7 +21,7 @@ public class Escenario extends JPanel {
     public static final int HEIGHT_IMG = 40;
     
 	private Objeto[][] escenario;
-	private ArrayList<Bomberman> bombers = new ArrayList<>();
+	private Map<Integer,Bomberman> bombers = new HashMap<Integer,Bomberman>();
 
 	
 	public Escenario() {
@@ -52,32 +54,34 @@ public class Escenario extends JPanel {
 			escenario[1][1]=null;
 			escenario[1][2]=null;
 			escenario[2][1]=null;
-			bombers.add(bombero);
+			bombers.put(bombero.getIdBomberman(), bombero);
 		}else if(bombers.size()==1) {
 			bombero = new Bomberman(new Punto(HEIGHT_IMG*1,WIDTH_IMG*13));
 			escenario[1][13]=null;
 			escenario[1][12]=null;
 			escenario[2][13]=null;
-			bombers.add(bombero);
+			bombers.put(bombero.getIdBomberman(), bombero);
 		}else if(bombers.size()==2) {
 			bombero = new Bomberman(new Punto(HEIGHT_IMG*11,WIDTH_IMG*1));
 			escenario[11][1]=null;
 			escenario[11][2]=null;
 			escenario[10][1]=null;
-			bombers.add(bombero);
+			bombers.put(bombero.getIdBomberman(), bombero);
+			
 		}
 		else if(bombers.size()==3) {
 			bombero = new Bomberman(new Punto(HEIGHT_IMG*11,WIDTH_IMG*13));
 			escenario[11][13]=null;
 			escenario[11][12]=null;
 			escenario[10][13]=null;
-			bombers.add(bombero);
+			bombers.put(bombero.getIdBomberman(), bombero);
+			
 		}
 		
 	}
 	
 	public void setBomberman(Bomberman b , int num) {
-		this.bombers.set(num, b);
+		this.bombers.put(b.getIdBomberman(), b);
 	}
 	public Bomberman getBomberman(int num) {
 		return bombers.get(num);
@@ -132,9 +136,9 @@ public class Escenario extends JPanel {
 					g.drawImage(escenario[i][j].getImagen().getImage(),j*WIDTH_IMG , i*HEIGHT_IMG , WIDTH_IMG,HEIGHT_IMG,null);
 		}
 		
-		for (Bomberman bombero : bombers) {
-			if(bombero.getVivo()) {
-				g.drawImage(bombero.getImagen().getImage(), (int)bombero.getCoordenada().getY(), (int)bombero.getCoordenada().getX(),  WIDTH_IMG,HEIGHT_IMG, null);
+		for (Map.Entry<Integer, Bomberman> bombero : bombers.entrySet()) {
+			if(bombero.getValue().getVivo()) {
+				g.drawImage(bombero.getValue().getImagen().getImage(), (int)bombero.getValue().getCoordenada().getY(), (int)bombero.getValue().getCoordenada().getX(),  WIDTH_IMG,HEIGHT_IMG, null);
 			}
 		} 
 		
@@ -146,6 +150,7 @@ public class Escenario extends JPanel {
 	}
 	
 	public void agregarObjeto(Punto coordenada) {
+		                         
 			Bomba bomba = new Bomba(coordenada);
 			escenario[(int)bomba.getCoordenada().getX()/HEIGHT_IMG][(int)bomba.getCoordenada().getY()/WIDTH_IMG] = bomba;
 			ArrayList<Punto> sectorDeExplosion = ((Bomba)escenario[(int)bomba.getCoordenada().getX()/HEIGHT_IMG][(int)bomba.getCoordenada().getY()/WIDTH_IMG]).explotar(); 
@@ -159,6 +164,7 @@ public class Escenario extends JPanel {
 			explo.start();
 			bombers = explo.getBomber();
 			this.escenario = explo.actualizar();
+//			bombers.get(0).descontarBomba();
 	}
 
 	

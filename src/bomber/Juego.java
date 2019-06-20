@@ -20,8 +20,7 @@ public class Juego extends JFrame{
 	private Escenario contentPane;
 	private Image ima;
 	private boolean arriba, abajo, izquierda, derecha;
-	private boolean ponerBomb;
-	
+	private boolean ponerBomb, escape;
 	
 	private Timer reDibujo = new Timer(10, new ActionListener() {
 		
@@ -36,6 +35,7 @@ public class Juego extends JFrame{
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 606, 548);
+	
 		
 		ima = new ImageIcon("./src/bomber/Imagenes/bombermanIcono.png").getImage();
 		setIconImage(ima);
@@ -43,7 +43,8 @@ public class Juego extends JFrame{
 		contentPane = new Escenario();
 		contentPane.agregarBomberman();
 		contentPane.agregarBomberman();
-
+		contentPane.agregarBomberman();
+		contentPane.agregarBomberman();
 		setContentPane(contentPane);
 		setLocationRelativeTo(null);
 		addKeyListener(new KeyAdapter() {
@@ -95,7 +96,8 @@ public class Juego extends JFrame{
 				break;
 			case KeyEvent.VK_B:
 				ponerBomb = true;
-
+			case KeyEvent.VK_ESCAPE:
+				escape = true;
 		}
 		
 	}
@@ -117,7 +119,8 @@ public class Juego extends JFrame{
 				break;
 			case KeyEvent.VK_B:
 				ponerBomb = false;
-
+			case KeyEvent.VK_ESCAPE:
+				escape = false;
 		}
 	}
 	
@@ -167,11 +170,18 @@ public class Juego extends JFrame{
 		if(ponerBomb) {
 			nuevo = contentPane.getBomberman(0);
 			Punto coordenada = new Punto(nuevo.getCoordenada().getX(), nuevo.getCoordenada().getY());
-			contentPane.agregarObjeto(coordenada);
+			if(nuevo.getVivo() && nuevo.getBombasPuestas()<=2) {
+				nuevo.aumentarBomba();
+				contentPane.setBomberman(nuevo, 0);
+				contentPane.agregarObjeto(coordenada);
+			}
+	
 			return;
 		
 		}
-		
+		if(escape) {
+			confirmarCierreVentana();
+		}
 		//repaint();
 		
 	}
@@ -287,5 +297,6 @@ public class Juego extends JFrame{
 				}
 			}
 	}
+
 
 }

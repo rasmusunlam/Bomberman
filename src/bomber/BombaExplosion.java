@@ -3,7 +3,8 @@ package bomber;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.Timer;
 
@@ -12,7 +13,7 @@ public class BombaExplosion extends Thread{
 	private ArrayList<Explosion> sector;
 	private int tiempo;
 	private Objeto[][] esc;
-	private ArrayList<Bomberman> bomber;
+	private Map<Integer,Bomberman> bomber = new HashMap<Integer,Bomberman>();
 	
 	
 	public BombaExplosion(ArrayList<Explosion> lista,Objeto[][] escenario) {
@@ -44,7 +45,9 @@ public class BombaExplosion extends Thread{
 						BombaExplosion b = new BombaExplosion(dibujarExplo(bomba.explotar()),0, esc);
 						b.start();
 						esc = b.actualizar();
+						
 						DesaparecerExplosion c = new DesaparecerExplosion(dibujarExplo(bomba.explotar()),1000, esc);
+						
 						c.setBomber(bomber);
 						c.start();
 						bomber = c.getBomber();
@@ -111,10 +114,10 @@ public class BombaExplosion extends Thread{
 			esc[(int)puntosExplotan.get(n).getX()][(int)puntosExplotan.get(n).getY()].getClass().getName().contains("Bloque_Destruible")||
 			esc[(int)puntosExplotan.get(n).getX()][(int)puntosExplotan.get(n).getY()].getClass().getName().contains("Bomba");
 	}
-	public ArrayList<Bomberman> getBomber() {
+	public Map<Integer,Bomberman> getBomber() {
 		return bomber;
 	}
-	public void setBomber(ArrayList<Bomberman> bomber) {
+	public void setBomber(Map<Integer,Bomberman> bomber) {
 		this.bomber = bomber;
 	}	
 
