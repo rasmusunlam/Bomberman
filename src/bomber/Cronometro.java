@@ -32,5 +32,9 @@ public class Cronometro extends Thread{
 			System.out.println("Error en el hilo: "+ e.getMessage());
 		}
 	}
+	
+	public JLabel getCrono() {
+		return crono;
+	}
 
 }

@@ -45,6 +45,9 @@ public class Escenario extends JPanel {
 		}
 
 	}
+	public Map<Integer,Bomberman> getMapaBombers(){
+		return bombers;
+	}
 	public void agregarBomberman() {
 		
 		Bomberman bombero;

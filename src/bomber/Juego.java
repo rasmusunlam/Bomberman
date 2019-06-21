@@ -25,12 +25,19 @@ public class Juego extends JFrame{
 	private boolean arriba, abajo, izquierda, derecha;
 	private boolean ponerBomb, escape;
 	private JPanel panel;
-	
+	private JPanelMarcador marcador;
+	private int numeroRondas;
 	private Timer reDibujo = new Timer(10, new ActionListener() {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			repaint();
+			
+			if(marcador.getReloj().getCrono().getText().equals("00:00") || contentPane.getMapaBombers().size() == 1) {
+				numeroRondas++;
+				dispose();
+			}
+			
 		}
 	});
 	
@@ -39,16 +46,17 @@ public class Juego extends JFrame{
 		super("Bomberman");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 606, 585);
-	
+		setBounds(100, 100, 606, 620);
+		numeroRondas =0;
 		
 		ima = new ImageIcon("./src/bomber/Imagenes/bombermanIcono.png").getImage();
 		setIconImage(ima);
 		panel = new JPanel();
 		contentPane = new Escenario();
 		
-		JPanelMarcador marcador = new JPanelMarcador(4);
+		marcador = new JPanelMarcador(2);
 		setContentPane(panel);
+		marcador.iniciarMarcador();
 		marcador.setSize(100, 100);
 		
 		panel.setLayout(new BorderLayout());
@@ -58,8 +66,7 @@ public class Juego extends JFrame{
 		
 		contentPane.agregarBomberman();
 		contentPane.agregarBomberman();
-		contentPane.agregarBomberman();
-		contentPane.agregarBomberman();
+
 		
 		
 		setLocationRelativeTo(null);

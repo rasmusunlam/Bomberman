@@ -42,6 +42,7 @@ public class DesaparecerExplosion extends Thread {
 						Punto p = new Punto((int)bomberman.getValue().getCoordenada().getX()/40,(int)bomberman.getValue().getCoordenada().getY()/40);
 						if(p.equals(punto.getCoordenada()))
 							bomberman.getValue().morir();
+							bomber.remove(bomberman.getKey());
 					}}
 					esc[(int)punto.getCoordenada().getX()][(int)punto.getCoordenada().getY()] = null;
 
