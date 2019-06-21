@@ -1,5 +1,7 @@
 package bomber;
 
+import java.awt.BorderLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +15,7 @@ import javax.management.openmbean.KeyAlreadyExistsException;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Juego extends JFrame{
@@ -21,6 +24,7 @@ public class Juego extends JFrame{
 	private Image ima;
 	private boolean arriba, abajo, izquierda, derecha;
 	private boolean ponerBomb, escape;
+	private JPanel panel;
 	
 	private Timer reDibujo = new Timer(10, new ActionListener() {
 		
@@ -31,21 +35,33 @@ public class Juego extends JFrame{
 	});
 	
 	public Juego() {
+		
 		super("Bomberman");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 606, 548);
+		setBounds(100, 100, 606, 585);
 	
 		
 		ima = new ImageIcon("./src/bomber/Imagenes/bombermanIcono.png").getImage();
 		setIconImage(ima);
-		
+		panel = new JPanel();
 		contentPane = new Escenario();
+		
+		JPanelMarcador marcador = new JPanelMarcador(4);
+		setContentPane(panel);
+		marcador.setSize(100, 100);
+		
+		panel.setLayout(new BorderLayout());
+		panel.add(marcador, BorderLayout.NORTH);
+
+		panel.add(contentPane);
+		
 		contentPane.agregarBomberman();
 		contentPane.agregarBomberman();
 		contentPane.agregarBomberman();
 		contentPane.agregarBomberman();
-		setContentPane(contentPane);
+		
+		
 		setLocationRelativeTo(null);
 		addKeyListener(new KeyAdapter() {
 			
@@ -285,6 +301,7 @@ public class Juego extends JFrame{
 
 	public static void main(String[] args) {
 		
+		
 		Juego juego = new Juego();
 		juego.setVisible(true);
 		
@@ -296,6 +313,7 @@ public class Juego extends JFrame{
 						e.printStackTrace();
 				}
 			}
+		
 	}
 
 

@@ -57,4 +57,5 @@ public class JPanelInicioJuego extends JPanel {
 		g.drawImage(imagen.getImage(), 0, 0, getWidth(), getHeight(), null);
 	}
 
+
 }
