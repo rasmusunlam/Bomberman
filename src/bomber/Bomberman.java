@@ -1,5 +1,8 @@
 package bomber;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.swing.ImageIcon;
 
 public class Bomberman {
@@ -17,6 +20,7 @@ public class Bomberman {
 	private ImageIcon[] imagenAbajo;
 	private ImageIcon[] imagenIzquierda;
 	private ImageIcon[] imagenDerecha;
+	private ImageIcon[] imagenMuerto;
 	private int contador = 0;
 	private int bombasPuestas = 0;
 	
@@ -72,12 +76,14 @@ public class Bomberman {
 		this.imagenAbajo = new ImageIcon[5];
 		this.imagenIzquierda = new ImageIcon[5];
 		this.imagenDerecha = new ImageIcon[5];
+		this.imagenMuerto = new ImageIcon[5];
 		
 		for(int i = 1; i <= 5; i++){
 			this.imagenArriba[i - 1] = new ImageIcon("./resources/bomberman/arriba"+id_bomberman+i+".gif");
 			this.imagenAbajo[i - 1] = new ImageIcon("./resources/bomberman/abajo"+id_bomberman+i+".gif");
 			this.imagenIzquierda[i - 1] = new ImageIcon("./resources/bomberman/izquierda"+id_bomberman+i+".gif");
 			this.imagenDerecha[i - 1] = new ImageIcon("./resources/bomberman/derecha"+id_bomberman+i+".gif");
+			this.imagenMuerto[i - 1] = new ImageIcon("./resources/bomberman/muerto"+id_bomberman+i+".gif");
 		}
 		
 		if(id_bomberman%2==0) {
@@ -116,7 +122,28 @@ public class Bomberman {
 	}
 	
 	public void morir() {
-		this.vivo=false;
+		
+		Timer timer = new Timer();
+		
+		TimerTask tarea = new TimerTask() {
+			
+			int contador = 0;
+			
+			@Override
+			public void run() {
+				
+				if(contador < 5)
+					
+					ima = imagenMuerto[contador];
+				else{
+					vivo = false;
+					cancel();
+				}
+				contador++;
+			}
+		};
+		
+		timer.schedule(tarea, 0, 60);
 	}
 	
 	public void aumentarBomba() {
